@@ -51,7 +51,7 @@ public final class SecureChatClient {
                 //.applicationProtocolConfig(ApplicationProtocolConfig.DISABLED)
                 //.sessionCacheSize(0)
                 //.sessionTimeout(0)
-                .sslProvider(SslProvider.OPENSSL)
+                .sslProvider(SslProvider.JDK)
                 .trustManager(InsecureTrustManagerFactory.INSTANCE)
                 //.keyManager(ssc.certificate(), ssc.privateKey())
                 .build();

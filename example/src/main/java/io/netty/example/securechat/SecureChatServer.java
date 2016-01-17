@@ -50,7 +50,7 @@ public final class SecureChatServer {
                 .clientAuth(ClientAuth.REQUIRE)
                // .sessionCacheSize(0)
                // .sessionTimeout(0)
-                .sslProvider(SslProvider.OPENSSL)
+                .sslProvider(SslProvider.JDK)
                 .trustManager(InsecureTrustManagerFactory.INSTANCE)
                 .build();
           
