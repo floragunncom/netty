@@ -22,8 +22,13 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.example.telnet.TelnetServer;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
+import io.netty.handler.ssl.ApplicationProtocolConfig;
+import io.netty.handler.ssl.ClientAuth;
+import io.netty.handler.ssl.OpenSsl;
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
+import io.netty.handler.ssl.SslProvider;
+import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
 import io.netty.handler.ssl.util.SelfSignedCertificate;
 
 /**
@@ -35,8 +40,21 @@ public final class SecureChatServer {
 
     public static void main(String[] args) throws Exception {
         SelfSignedCertificate ssc = new SelfSignedCertificate();
-        SslContext sslCtx = SslContextBuilder.forServer(ssc.certificate(), ssc.privateKey())
-            .build();
+        //SslContext sslCtx = SslContextBuilder.forServer(ssc.certificate(), ssc.privateKey())
+        //    .build();
+                
+        final SslContext sslCtx = SslContextBuilder
+                .forServer(ssc.certificate(), ssc.privateKey())
+                //.ciphers(getEnabledSSLCiphers())
+               // .applicationProtocolConfig(ApplicationProtocolConfig.DISABLED)
+                .clientAuth(ClientAuth.REQUIRE)
+               // .sessionCacheSize(0)
+               // .sessionTimeout(0)
+                .sslProvider(SslProvider.OPENSSL)
+                .trustManager(InsecureTrustManagerFactory.INSTANCE)
+                .build();
+          
+        
 
         EventLoopGroup bossGroup = new NioEventLoopGroup(1);
         EventLoopGroup workerGroup = new NioEventLoopGroup();

@@ -22,9 +22,12 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.example.telnet.TelnetClient;
+import io.netty.handler.ssl.ApplicationProtocolConfig;
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
+import io.netty.handler.ssl.SslProvider;
 import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
+import io.netty.handler.ssl.util.SelfSignedCertificate;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -39,8 +42,19 @@ public final class SecureChatClient {
 
     public static void main(String[] args) throws Exception {
         // Configure SSL.
+        //final SslContext sslCtx = SslContextBuilder.forClient()
+        //    .trustManager(InsecureTrustManagerFactory.INSTANCE).build();
+        SelfSignedCertificate ssc = new SelfSignedCertificate();
+        
         final SslContext sslCtx = SslContextBuilder.forClient()
-            .trustManager(InsecureTrustManagerFactory.INSTANCE).build();
+                //.ciphers(getEnabledSSLCiphers())
+                //.applicationProtocolConfig(ApplicationProtocolConfig.DISABLED)
+                //.sessionCacheSize(0)
+                //.sessionTimeout(0)
+                .sslProvider(SslProvider.OPENSSL)
+                .trustManager(InsecureTrustManagerFactory.INSTANCE)
+                //.keyManager(ssc.certificate(), ssc.privateKey())
+                .build();
 
         EventLoopGroup group = new NioEventLoopGroup();
         try {
@@ -54,12 +68,11 @@ public final class SecureChatClient {
 
             // Read commands from the stdin.
             ChannelFuture lastWriteFuture = null;
-            BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+            //BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
             for (;;) {
-                String line = in.readLine();
-                if (line == null) {
-                    break;
-                }
+                String line = Thread.currentThread().getId()+"msg"+System.currentTimeMillis();//in.readLine();
+                
+                Thread.sleep(1000);
 
                 // Sends the received line to the server.
                 lastWriteFuture = ch.writeAndFlush(line + "\r\n");

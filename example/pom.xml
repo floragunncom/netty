@@ -60,10 +60,11 @@
       <artifactId>protobuf-java</artifactId>
     </dependency>
     <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>netty-tcnative</artifactId>
-      <classifier>${tcnative.classifier}</classifier>
-    </dependency>
+          <groupId>io.netty</groupId>
+          <artifactId>netty-tcnative</artifactId>
+          <version>1.1.33.Fork10</version>
+          <classifier>osx-x86_64</classifier>
+        </dependency> 
     <dependency>
       <groupId>org.eclipse.jetty.npn</groupId>
       <artifactId>npn-api</artifactId>
