@@ -30,7 +30,10 @@ import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
 import io.netty.handler.ssl.util.SelfSignedCertificate;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStreamReader;
+import java.security.KeyStore;
 
 /**
  * Simple SSL chat client modified from {@link TelnetClient}.
@@ -41,19 +44,18 @@ public final class SecureChatClient {
     static final int PORT = Integer.parseInt(System.getProperty("port", "8992"));
 
     public static void main(String[] args) throws Exception {
-        // Configure SSL.
-        //final SslContext sslCtx = SslContextBuilder.forClient()
-        //    .trustManager(InsecureTrustManagerFactory.INSTANCE).build();
-        SelfSignedCertificate ssc = new SelfSignedCertificate();
+        File[] pemks = SSLCertificateHelper.jksKsToPem("node-0-keystore.jks");
+        File pemts = SSLCertificateHelper.jksTsToPem("truststore.jks");
+
         
         final SslContext sslCtx = SslContextBuilder.forClient()
                 //.ciphers(getEnabledSSLCiphers())
-                //.applicationProtocolConfig(ApplicationProtocolConfig.DISABLED)
-                //.sessionCacheSize(0)
-                //.sessionTimeout(0)
-                .sslProvider(SslProvider.JDK)
-                .trustManager(InsecureTrustManagerFactory.INSTANCE)
-                //.keyManager(ssc.certificate(), ssc.privateKey())
+                .applicationProtocolConfig(ApplicationProtocolConfig.DISABLED)
+                .sessionCacheSize(0)
+                .sessionTimeout(0)
+                .sslProvider(Main.PROVIDER)
+                .trustManager(pemts)
+                .keyManager(pemks[0], pemks[1])
                 .build();
 
         EventLoopGroup group = new NioEventLoopGroup();

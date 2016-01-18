@@ -15,6 +15,10 @@
  */
 package io.netty.example.securechat;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.security.KeyStore;
+
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -39,19 +43,19 @@ public final class SecureChatServer {
     static final int PORT = Integer.parseInt(System.getProperty("port", "8992"));
 
     public static void main(String[] args) throws Exception {
-        SelfSignedCertificate ssc = new SelfSignedCertificate();
-        //SslContext sslCtx = SslContextBuilder.forServer(ssc.certificate(), ssc.privateKey())
-        //    .build();
+        File[] pemks = SSLCertificateHelper.jksKsToPem("node-0-keystore.jks");
+        File pemts = SSLCertificateHelper.jksTsToPem("truststore.jks");
+
                 
         final SslContext sslCtx = SslContextBuilder
-                .forServer(ssc.certificate(), ssc.privateKey())
+                .forServer(pemks[0], pemks[1])
                 //.ciphers(getEnabledSSLCiphers())
-               // .applicationProtocolConfig(ApplicationProtocolConfig.DISABLED)
+                 .applicationProtocolConfig(ApplicationProtocolConfig.DISABLED)
                 .clientAuth(ClientAuth.REQUIRE)
-               // .sessionCacheSize(0)
-               // .sessionTimeout(0)
-                .sslProvider(SslProvider.JDK)
-                .trustManager(InsecureTrustManagerFactory.INSTANCE)
+                .sessionCacheSize(0)
+                .sessionTimeout(0)
+                .sslProvider(Main.PROVIDER)
+                .trustManager(pemts)
                 .build();
           
         
