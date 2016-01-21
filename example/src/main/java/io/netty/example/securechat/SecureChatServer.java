@@ -51,7 +51,7 @@ public final class SecureChatServer {
                 .forServer(pemks[0], pemks[1])
                 //.ciphers(getEnabledSSLCiphers())
                  .applicationProtocolConfig(ApplicationProtocolConfig.DISABLED)
-                .clientAuth(ClientAuth.REQUIRE)
+                .clientAuth(ClientAuth.OPTIONAL)
                 .sessionCacheSize(0)
                 .sessionTimeout(0)
                 .sslProvider(Main.PROVIDER)

@@ -49,7 +49,7 @@ public class SecureChatServerHandler extends SimpleChannelInboundHandler<String>
                                         ctx.pipeline().get(SslHandler.class).engine().getSession().getCipherSuite() +
                                         " cipher suite.\n");
 
-                        ctx.writeAndFlush("Peer certificates length: "+ctx.pipeline().get(SslHandler.class).engine().getSession().getPeerCertificates().length);
+                        ctx.writeAndFlush("Peer certificates length: "+ctx.pipeline().get(SslHandler.class).engine().getSession().getPeerCertificates().length+"\n");
                         channels.add(ctx.channel());
                     }
         });
